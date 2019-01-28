@@ -7,6 +7,7 @@ import (
 	"regexp"
 	"strings"
 	"sync"
+	"unicode"
 )
 
 var (
@@ -71,7 +72,7 @@ func renameFile(name string, wg *sync.WaitGroup, folder string) {
 func getExp() *regexp.Regexp {
 	if fh == nil {
 		var err error
-		fh, err = regexp.Compile(`(^[_A-Z0-9]+?)[-_]?(\d+)[-_]?([A-C]?)R?P?L?[D-Z,]?\s*\.(\w+$)`)
+		fh, err = regexp.Compile(`(^[_A-Z0-9]+?)[-_]?(\d+)\s*[-_~]?([A-C1-9]?)R?P?L?[A-Z\d\.,+]*\s*\.(\w+$)`)
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -93,21 +94,26 @@ func preProcess(old string) string {
 func Normalize(old string) string {
 	ret := removeDuplicatedSuffix(old)
 	exp := getExp()
-	matched := exp.FindAllStringSubmatch(preProcess(ret), -1)
-	length := len(matched)
-	if length > 0 {
-		groups := matched[0]
-		product := strings.ToUpper(groups[1])
-		number := strings.TrimLeft(groups[2], " 0")
-		series := strings.ToUpper(groups[3])
-		ext := strings.ToLower(groups[4])
-		if len(groups[3]) == 0 {
-			ret = fmt.Sprintf("%v-%03v.%v", product, number, ext)
+	preProcessed := preProcess(ret)
+	if !first2LetterHasNumber(preProcessed) {
+		matched := exp.FindAllStringSubmatch(preProcessed, -1)
+		length := len(matched)
+		if length > 0 {
+			groups := matched[0]
+			product := strings.ToUpper(groups[1])
+			number := strings.TrimLeft(groups[2], " 0")
+			series := strings.ToUpper(groups[3])
+			ext := strings.ToLower(groups[4])
+			if len(groups[3]) == 0 {
+				ret = fmt.Sprintf("%v-%03v.%v", product, number, ext)
+			} else {
+				ret = fmt.Sprintf("%v-%03v_%v.%v", product, number, series, ext)
+			}
 		} else {
-			ret = fmt.Sprintf("%v-%03v_%v.%v", product, number, series, ext)
+			log.Printf("%v doesn't match to a FH.", ret)
 		}
 	} else {
-		log.Printf("%v doesn't match to a FH.", ret)
+		ret = removeExt(preProcessed) + strings.ToLower(filepath.Ext(preProcessed))
 	}
 
 	return ret
@@ -120,4 +126,18 @@ func removeDuplicatedSuffix(filename string) string {
 		currentName = strings.TrimSuffix(currentName, ext)
 	}
 	return currentName
+}
+
+func removeExt(fn string) string {
+	return strings.TrimSuffix(fn, filepath.Ext(fn))
+}
+
+func first2LetterHasNumber(s string) bool {
+	s = removeExt(s)[:2]
+	for _, r := range s {
+		if unicode.IsNumber(r) {
+			return true
+		}
+	}
+	return false
 }

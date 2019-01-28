@@ -6,8 +6,8 @@ import (
 
 func assertNormalizeResult(t *testing.T, src, dest string) {
 	ret := Normalize(src)
-	t.Logf("%-30v--->\t%v", src, ret)
 	if ret != dest {
+		t.Logf("%-30v--->\t%v", src, ret)
 		t.Logf("                          should be: %v", dest)
 		t.Fail()
 	}
@@ -17,6 +17,7 @@ func TestNormalize(t *testing.T) {
 	assertNormalizeResult(t, "abc001.avi", "ABC-001.avi")
 	assertNormalizeResult(t, "etf-123.mp4", "ETF-123.mp4")
 	assertNormalizeResult(t, "001-124.AVI", "001-124.avi")
+	assertNormalizeResult(t, "T28-123.jpg", "T28-123.jpg")
 	assertNormalizeResult(t, "abef-213r.gif", "ABEF-213.gif")
 	assertNormalizeResult(t, "eft-124a.jpg", "EFT-124_A.jpg")
 	assertNormalizeResult(t, "GFE-123-b.rmvb", "GFE-123_B.rmvb")
@@ -28,7 +29,7 @@ func TestNormalize(t *testing.T) {
 	assertNormalizeResult(t, "sadr-052rpl.jpg", "SADR-052.jpg")
 	assertNormalizeResult(t, "ZDAD-28_ENG_01.rmvb", "ZDAD-28_ENG_01.rmvb")
 	assertNormalizeResult(t, "COSQ-017_1.rmvb", "COSQ-017_1.rmvb")
-	assertNormalizeResult(t, "ENFD-5401 Extra.rmvb", "ENFD-5401 Extra.rmvb")
+	assertNormalizeResult(t, "ENFD-5401 Extra.rmvb", "ENFD-5401.rmvb")
 	assertNormalizeResult(t, "heyzo_lt_0203.jpg", "HEYZO_LT-203.jpg")
 	assertNormalizeResult(t, "abs-55a.avi", "ABS-055_A.avi")
 	assertNormalizeResult(t, "abs-56_a.avi", "ABS-056_A.avi")
@@ -40,4 +41,9 @@ func TestNormalize(t *testing.T) {
 	assertNormalizeResult(t, "abc089.avi.avi", "ABC-089.avi")
 	assertNormalizeResult(t, "abc090.mp4.mp4.mp4", "ABC-090.mp4")
 	assertNormalizeResult(t, "[TtZz.Yy]abc-095.mp4", "ABC-095.mp4")
+	assertNormalizeResult(t, "abcd618 m .avi", "ABCD-618.avi")
+	assertNormalizeResult(t, "abcd619 nnn .avi", "ABCD-619.avi")
+	assertNormalizeResult(t, "abc103++ .avi", "ABC-103.avi")
+	assertNormalizeResult(t, "HND-581~kan224.com.mp4", "HND-581.mp4")
+	assertNormalizeResult(t, "SW610.mp4", "SW-610.mp4")
 }

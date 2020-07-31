@@ -72,7 +72,7 @@ func renameFile(name string, wg *sync.WaitGroup, folder string) {
 func getExp() *regexp.Regexp {
 	if fh == nil {
 		var err error
-		fh, err = regexp.Compile(`(^[_A-Z0-9]+?)[-_]?(\d+)\s*[-_~]?([A-C1-9]?)R?P?L?[A-Z\d\.,+]*\s*\.(\w+$)`)
+		fh, err = regexp.Compile(`(^[_A-Z0-9]+?)[-_]?(\d+)\s*[-_~]?([A-C1-9]?)R?P?L?@?[A-Z\d.,+]*\s*\.(\w+$)`)
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -82,13 +82,31 @@ func getExp() *regexp.Regexp {
 
 func preProcess(old string) string {
 	ret := strings.ToUpper(old)
-	ret = strings.TrimPrefix(ret, "HD-")
-	squareRight := strings.LastIndex(ret, "]")
-	squareLeft := strings.Index(ret, "[")
-	if squareRight > squareLeft {
-		ret = ret[0:squareLeft] + ret[squareRight+1:len(ret)]
-	}
+	ret = strings.TrimPrefix(ret, "HD")
+	ret = strings.Trim(ret, `_-`)
+	ret = removePair(ret, "[]")
+	ret = removePair(ret, "()")
 	return ret
+}
+
+func removePair(s, pair string) string {
+	if len(pair) != 2 {
+		panic("pair should have 2 characters")
+	}
+	left := string(pair[0])
+	right := string(pair[1])
+	for {
+		iRight := strings.LastIndex(s, right)
+		if iRight == -1 {
+			break
+		}
+		iLeft := strings.LastIndex(s, left)
+		if iLeft == -1 {
+			break
+		}
+		s = s[0:iLeft] + s[iRight+1:]
+	}
+	return s
 }
 
 func Normalize(old string) string {

@@ -7,8 +7,7 @@ import (
 func assertNormalizeResult(t *testing.T, src, dest string) {
 	ret := Normalize(src)
 	if ret != dest {
-		t.Logf("%-30v--->\t%v", src, ret)
-		t.Logf("                          should be: %v", dest)
+		t.Logf(" %v ---> %v , should be %v", src, ret, dest)
 		t.Fail()
 	}
 }
@@ -46,4 +45,8 @@ func TestNormalize(t *testing.T) {
 	assertNormalizeResult(t, "abc103++ .avi", "ABC-103.avi")
 	assertNormalizeResult(t, "HND-581~kan224.com.mp4", "HND-581.mp4")
 	assertNormalizeResult(t, "SW610.mp4", "SW-610.mp4")
+	assertNormalizeResult(t, "opqr-123-7.mp4", "OPQR-123_7.mp4")
+	assertNormalizeResult(t, "HD_apns-196.mp4", "APNS-196.mp4")
+	assertNormalizeResult(t, "HD_apns-196(A)(B).mp4", "APNS-196.mp4")
+	assertNormalizeResult(t, "CAWD-102C(720P)@18P2P.mp4", "CAWD-102_C.mp4")
 }

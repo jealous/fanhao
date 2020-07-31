@@ -1,8 +1,8 @@
 package main
 
 import (
-	"os"
 	"github.com/jealous/fanhao/lib"
+	"os"
 )
 
 func main() {

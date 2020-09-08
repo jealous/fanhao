@@ -86,7 +86,32 @@ func preProcess(old string) string {
 	ret = strings.Trim(ret, `_-`)
 	ret = removePair(ret, "[]")
 	ret = removePair(ret, "()")
+	ret = removeInvalidFields(ret, "_")
 	return ret
+}
+
+func removeInvalidFields(input string, sep string) string {
+	ext := filepath.Ext(input)
+	s := strings.TrimSuffix(input, ext)
+	var invalidSet = []string{"@", "."}
+	o := strings.Split(s, sep)
+	if len(o) == 1 {
+		return input
+	}
+	n := make([]string, 0)
+	for _, f := range o {
+		isInvalid := false
+		for _, c := range invalidSet {
+			if strings.Index(f, c) != -1 {
+				isInvalid = true
+				break
+			}
+		}
+		if !isInvalid {
+			n = append(n, f)
+		}
+	}
+	return strings.Join(n, sep) + ext
 }
 
 func removePair(s, pair string) string {
@@ -151,7 +176,11 @@ func removeExt(fn string) string {
 }
 
 func first2LetterHasNumber(s string) bool {
-	s = removeExt(s)[:2]
+	name := removeExt(s)
+	if len(name) <= 2 {
+		return false
+	}
+	s = name[:2]
 	for _, r := range s {
 		if unicode.IsNumber(r) {
 			return true

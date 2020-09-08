@@ -13,7 +13,7 @@ func assertNormalizeResult(t *testing.T, src, dest string) {
 }
 
 func TestNormalize(t *testing.T) {
-	assertNormalizeResult(t, "abc001.avi", "ABC-001.avi")
+	assertNormalizeResult(t, "abc010_1.2K.avi", "ABC-010.avi")
 	assertNormalizeResult(t, "etf-123.mp4", "ETF-123.mp4")
 	assertNormalizeResult(t, "001-124.AVI", "001-124.avi")
 	assertNormalizeResult(t, "T28-123.jpg", "T28-123.jpg")
@@ -49,4 +49,5 @@ func TestNormalize(t *testing.T) {
 	assertNormalizeResult(t, "HD_apns-196.mp4", "APNS-196.mp4")
 	assertNormalizeResult(t, "HD_apns-196(A)(B).mp4", "APNS-196.mp4")
 	assertNormalizeResult(t, "CAWD-102C(720P)@18P2P.mp4", "CAWD-102_C.mp4")
+	assertNormalizeResult(t, "@方块字@hello.com_ABC-999_1.2K.mp4", "ABC-999.mp4")
 }

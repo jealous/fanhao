@@ -28,7 +28,7 @@ func TestNormalize(t *testing.T) {
 	assertNormalizeResult(t, "sadr-052rpl.jpg", "SADR-052.jpg")
 	assertNormalizeResult(t, "ZDAD-28_ENG_01.rmvb", "ZDAD-28_ENG_01.rmvb")
 	assertNormalizeResult(t, "COSQ-017_1.rmvb", "COSQ-017_1.rmvb")
-	assertNormalizeResult(t, "ENFD-5401 Extra.rmvb", "ENFD-5401.rmvb")
+	assertNormalizeResult(t, "ENFD-5401 Extra.rmvb", "ENFD-5401_E.rmvb")
 	assertNormalizeResult(t, "heyzo_lt_0203.jpg", "HEYZO_LT-203.jpg")
 	assertNormalizeResult(t, "abs-55a.avi", "ABS-055_A.avi")
 	assertNormalizeResult(t, "abs-56_a.avi", "ABS-056_A.avi")
@@ -50,4 +50,6 @@ func TestNormalize(t *testing.T) {
 	assertNormalizeResult(t, "HD_apns-196(A)(B).mp4", "APNS-196.mp4")
 	assertNormalizeResult(t, "CAWD-102C(720P)@18P2P.mp4", "CAWD-102_C.mp4")
 	assertNormalizeResult(t, "@方块字@hello.com_ABC-999_1.2K.mp4", "ABC-999.mp4")
+	assertNormalizeResult(t, "MDVR-018E.VR.mp4", "MDVR-018_E.mp4")
+	assertNormalizeResult(t, "kiwvr-363 2.mp4", "KIWVR-363_2.mp4")
 }

@@ -72,7 +72,7 @@ func renameFile(name string, wg *sync.WaitGroup, folder string) {
 func getExp() *regexp.Regexp {
 	if fh == nil {
 		var err error
-		fh, err = regexp.Compile(`(^[_A-Z0-9]+?)[-_]?(\d+)\s*[-_~]?([A-C1-9]?)R?P?L?@?[A-Z\d.,+]*\s*\.(\w+$)`)
+		fh, err = regexp.Compile(`(^[_A-Z0-9]+?)[-_]?(\d+)\s*[-_~]?([A-G1-9]?)R?P?L?@?[A-Z\d.,+]*\s*\.(\w+$)`)
 		if err != nil {
 			log.Fatal(err)
 		}
